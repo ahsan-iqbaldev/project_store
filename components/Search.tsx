@@ -5,11 +5,11 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-// import { getFiles } from "@/lib/actions/file.actions";
 import { Models } from "node-appwrite";
 import { useDebounce } from "use-debounce";
 import FormattedDateTime from "./FormattedDateTime";
 import Thumbnail from "./Thumbnail";
+import { getFiles } from "@/lib/actions/file.actions";
 const Search = () => {
   const [query, setQuery] = useState("");
   const searchParams = useSearchParams();
@@ -28,8 +28,8 @@ const Search = () => {
         return router.push(path.replace(searchParams.toString(), ""));
       }
 
-    //   const files = await getFiles({ types: [], searchText: debouncedQuery });
-    //   setResults(files.documents);
+      const files = await getFiles({ types: [], searchText: debouncedQuery });
+      setResults(files.documents);
       setOpen(true);
     };
 

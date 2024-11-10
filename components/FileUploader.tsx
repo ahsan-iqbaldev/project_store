@@ -9,8 +9,8 @@ import Image from "next/image";
 import Thumbnail from "@/components/Thumbnail";
 import { MAX_FILE_SIZE } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
-// import { uploadFile } from "@/lib/actions/file.actions";
 import { usePathname } from "next/navigation";
+import { uploadFile } from "@/lib/actions/file.actions";
 
 interface Props {
   ownerId: string;
@@ -44,15 +44,15 @@ const FileUploader = ({ ownerId, accountId, className }: Props) => {
           });
         }
 
-        // return uploadFile({ file, ownerId, accountId, path }).then(
-        //   (uploadedFile) => {
-        //     if (uploadedFile) {
-        //       setFiles((prevFiles) =>
-        //         prevFiles.filter((f) => f.name !== file.name),
-        //       );
-        //     }
-        //   },
-        // );
+        return uploadFile({ file, ownerId, accountId, path }).then(
+          (uploadedFile) => {
+            if (uploadedFile) {
+              setFiles((prevFiles) =>
+                prevFiles.filter((f) => f.name !== file.name),
+              );
+            }
+          },
+        );
       });
 
       await Promise.all(uploadPromises);

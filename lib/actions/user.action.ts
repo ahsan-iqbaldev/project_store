@@ -6,6 +6,7 @@ import { appwriteConfig } from "../appwrite/config";
 import { avatarPlaceholderUrl } from "@/constants";
 import { cookies } from "next/headers";
 import { parseStringify } from "../utils";
+import { redirect } from "next/navigation";
 
 ////Get Document using email
 const getUserByEmail = async (email: string) => {
@@ -121,7 +122,7 @@ export const getCurrentUser = async () => {
     const user = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.usersCollectionId,
-      [Query.equal("accountId", result.$id)],
+      [Query.equal("accountId", result.$id)]
     );
 
     if (user.total <= 0) return null;
@@ -129,5 +130,20 @@ export const getCurrentUser = async () => {
     return parseStringify(user.documents[0]);
   } catch (error) {
     console.log(error);
+  }
+};
+
+/// Logout User
+
+export const signOutUser = async () => {
+  const { account } = await createSessionClient();
+
+  try {
+    await account.deleteSession("current");
+    (await cookies()).delete("appwrite-session");
+  } catch (error) {
+    handleError(error, "Failed to sign out user");
+  } finally {
+    redirect("/signin");
   }
 };
